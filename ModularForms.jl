@@ -14,8 +14,7 @@ using ComplexColor: GLMakie.Screen
 
 # σ(a, n) = sum(d(n) .^ a)
 
-function S(a, q)
-    t = 275
+function S(a, q, t = 275)
     sum(n ^ a * q ^ n / (1 - q ^ n) for n = 1:t)
     # sum(σ(a, n) * q ^ n for n = 1:t)
 end
