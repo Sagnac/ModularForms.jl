@@ -14,18 +14,20 @@ using ComplexColor: GLMakie.Screen
 
 # σ(a, n) = sum(d(n) .^ a)
 
-function S(a, q, t = 275)
+t = 275
+
+function S(a, q, t = t)
     sum(n ^ a * q ^ n / (1 - q ^ n) for n = 1:t)
     # sum(σ(a, n) * q ^ n for n = 1:t)
 end
 
-g2(q) = (4 * π^4 / 3) * (1 + 240 * S(3, q))
+g2(q, t = t) = (4 * π^4 / 3) * (1 + 240 * S(3, q, t))
 
-g3(q) = (8 * π^6 / 27) * (1 - 504 * S(5, q))
+g3(q, t = t) = (8 * π^6 / 27) * (1 - 504 * S(5, q, t))
 
-function j(q)
-    g2_3 = g2(q) ^ 3
-    1728 * g2_3 / (g2_3 - 27 * g3(q) ^ 2)
+function j(q, t = t)
+    g2_3 = g2(q, t) ^ 3
+    1728 * g2_3 / (g2_3 - 27 * g3(q, t) ^ 2)
 end
 
 q(τ) = ei2pi(τ)
