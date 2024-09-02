@@ -1,5 +1,10 @@
+module ModularForms
+
 using ComplexColor
 using ComplexColor: GLMakie.Screen
+using Main: ei2pi
+
+export S, g2, g3, j, q, image_1, image_2
 
 # function d(n)
     # v = [1]
@@ -76,3 +81,5 @@ image_2 = ComplexColor.image(Im_g2; kwargs...)
 
 display(Screen(), image_1)
 display(Screen(), image_2)
+
+end
