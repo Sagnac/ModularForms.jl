@@ -6,6 +6,9 @@ using Main: ei2pi
 
 export S, g2, g3, j, q, figure
 
+const ∑ = sum
+const ∏ = prod
+
 # function d(n)
     # v = [1]
     # f = 2
@@ -22,18 +25,24 @@ export S, g2, g3, j, q, figure
 t = 275
 
 function S(a, q, t = t)
-    sum(n ^ a * q ^ n / (1 - q ^ n) for n = 1:t)
+    ∑(n ^ a * q ^ n / (1 - q ^ n) for n = 1:t)
     # sum(σ(a, n) * q ^ n for n = 1:t)
 end
 
-g2(q, t = t) = (4 * π^4 / 3) * (1 + 240 * S(3, q, t))
+E4(q, t = t) = 1 + 240 * S(3, q, t)
+
+Δ(q, t = t) = q * ∏((1 - q ^ n) ^ 24 for n = 1:t)
+
+g2(q, t = t) = (4 * π^4 / 3) * E4(q, t)
 
 g3(q, t = t) = (8 * π^6 / 27) * (1 - 504 * S(5, q, t))
 
-function j(q, t = t)
-    g2_3 = g2(q, t) ^ 3
-    1728 * g2_3 / (g2_3 - 27 * g3(q, t) ^ 2)
-end
+j(q, t = t) = E4(q, t) ^ 3 / Δ(q, t)
+
+# function j(q, t = t)
+    # g2_3 = g2(q, t) ^ 3
+    # 1728 * g2_3 / (g2_3 - 27 * g3(q, t) ^ 2)
+# end
 
 q(τ) = ei2pi(τ)
 
@@ -84,6 +93,6 @@ ComplexColor.image!(axis_Im, Im_g2; kwargs...)
 # ComplexColor.image(Im_g2)
 # ComplexColor.image(angle.(_g2))
 
-display(figure)
+# display(figure)
 
 end
