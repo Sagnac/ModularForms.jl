@@ -75,6 +75,8 @@ figure = ComplexColor.Figure(; size = (2len, len))
 titlesize = 21
 axis_Re = ComplexColor.Axis(figure[1,1]; title = L"Re(g_2(q))", titlesize)
 axis_Im = ComplexColor.Axis(figure[1,2]; title = L"Im(g_2(q))", titlesize)
+ComplexColor.hidedecorations!(axis_Re)
+ComplexColor.hidedecorations!(axis_Im)
 kwargs = (; interpolate = false, colormap = :pink)
 
 ComplexColor.image!(axis_Re, Re_g2; kwargs...)
