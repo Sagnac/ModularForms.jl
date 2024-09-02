@@ -66,10 +66,13 @@ map!(x -> log(x + 1), Re_g2, Re_g2)
 
 map!(x -> log(x + 1), Im_g2, Im_g2)
 
-image_1 = ComplexColor.image(Re_g2, interpolate = false)
-# ComplexColor.image(Im_g2, interpolate = false)
-# ComplexColor.image(angle.(_g2), interpolate = false)
-image_2 = ComplexColor.image(Im_g2, interpolate = false)
+figure = (; size = (len, len))
+kwargs = (; figure, interpolate = false)
+
+image_1 = ComplexColor.image(Re_g2; kwargs...)
+# ComplexColor.image(Im_g2; kwargs)
+# ComplexColor.image(angle.(_g2); kwargs)
+image_2 = ComplexColor.image(Im_g2; kwargs...)
 
 display(Screen(), image_1)
 display(Screen(), image_2)
