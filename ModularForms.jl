@@ -4,7 +4,7 @@ using ComplexColor
 using ComplexColor: GLMakie.Screen
 using Main: ei2pi
 
-export S, g2, g3, j, q, image_1, image_2
+export S, g2, g3, j, q, figure
 
 # function d(n)
     # v = [1]
@@ -71,15 +71,17 @@ map!(x -> log(x + 1), Re_g2, Re_g2)
 
 map!(x -> log(x + 1), Im_g2, Im_g2)
 
-figure = (; size = (len, len))
-kwargs = (; figure, interpolate = false)
+figure = ComplexColor.Figure(; size = (2len, len))
+titlesize = 21
+axis_Re = ComplexColor.Axis(figure[1,1]; title = L"Re(g_2(q))", titlesize)
+axis_Im = ComplexColor.Axis(figure[1,2]; title = L"Im(g_2(q))", titlesize)
+kwargs = (; interpolate = false)
 
-image_1 = ComplexColor.image(Re_g2; kwargs...)
-# ComplexColor.image(Im_g2; kwargs)
-# ComplexColor.image(angle.(_g2); kwargs)
-image_2 = ComplexColor.image(Im_g2; kwargs...)
+ComplexColor.image!(axis_Re, Re_g2; kwargs...)
+ComplexColor.image!(axis_Im, Im_g2; kwargs...)
+# ComplexColor.image(Im_g2)
+# ComplexColor.image(angle.(_g2))
 
-display(Screen(), image_1)
-display(Screen(), image_2)
+display(figure)
 
 end
