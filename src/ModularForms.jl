@@ -76,8 +76,8 @@ function complex_plot(f::ModularForm, n = 500)
 
     figure = ComplexColor.Figure(; size = (2n, n))
     titlesize = 21
-    axis_Re = ComplexColor.Axis(figure[1,1]; title = L"Re(f(q))", titlesize)
-    axis_Im = ComplexColor.Axis(figure[1,2]; title = L"Im(f(q))", titlesize)
+    axis_Re = ComplexColor.Axis(figure[1,1]; title = L"Re_+(f(q))", titlesize)
+    axis_Im = ComplexColor.Axis(figure[1,2]; title = L"Im_+(f(q))", titlesize)
     ComplexColor.hidedecorations!(axis_Re)
     ComplexColor.hidedecorations!(axis_Im)
     kwargs = (; interpolate = false, colormap = :pink)
