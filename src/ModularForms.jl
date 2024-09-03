@@ -3,7 +3,6 @@ module ModularForms
 using ComplexColor
 import ComplexColor: GLMakie.Screen, complex_plot
 using SpecialFunctions: zeta
-using Main: ei2pi
 
 export ModularForm, S, E, j, q, complex_plot
 
@@ -11,6 +10,8 @@ const ∑ = sum
 const ∏ = prod
 const ζ = zeta
 const t = 275
+
+ei2pi(x) = cispi(2x)
 
 abstract type ModularForm end
 
