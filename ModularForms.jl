@@ -2,12 +2,31 @@ module ModularForms
 
 using ComplexColor
 using ComplexColor: GLMakie.Screen
+using SpecialFunctions: zeta
 using Main: ei2pi
 
-export S, g2, g3, j, q, figure
+export ModularForm, S, E, g2, g3, j, q, figure
 
 const ∑ = sum
 const ∏ = prod
+const ζ = zeta
+
+t = 275
+
+abstract type ModularForm end
+
+struct E <: ModularForm
+    k::Int
+    c::Float64
+    t::Int
+    function E(k, t)
+        (isodd(k) || k < 2) && error("Weight must be even and greater than two.")
+        c = 2 / ζ(1 - k)
+        new(k, c, t)
+    end
+end
+
+E(k) = E(k, t)
 
 # function d(n)
     # v = [1]
@@ -22,22 +41,25 @@ const ∏ = prod
 
 # σ(a, n) = sum(d(n) .^ a)
 
-t = 275
-
-function S(a, q, t = t)
+function S(a, q, t)
     ∑(n ^ a * q ^ n / (1 - q ^ n) for n = 1:t)
     # sum(σ(a, n) * q ^ n for n = 1:t)
 end
 
-E4(q, t = t) = 1 + 240 * S(3, q, t)
+function (E_k::E)(q)
+    (; k, c, t) = E_k
+    1 + c * S(k - 1, q, t)
+end
+
+E4 = E(4)
 
 Δ(q, t = t) = q * ∏((1 - q ^ n) ^ 24 for n = 1:t)
 
-g2(q, t = t) = (4 * π^4 / 3) * E4(q, t)
+g2(q) = (4 * π^4 / 3) * E4(q)
 
-g3(q, t = t) = (8 * π^6 / 27) * (1 - 504 * S(5, q, t))
+g3(q) = (8 * π^6 / 27) * E(6)(q)
 
-j(q, t = t) = E4(q, t) ^ 3 / Δ(q, t)
+j(q, t = t) = E(4, t)(q) ^ 3 / Δ(q, t)
 
 # function j(q, t = t)
     # g2_3 = g2(q, t) ^ 3
