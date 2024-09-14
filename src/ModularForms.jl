@@ -71,8 +71,8 @@ function complex_plot(f::ModularForm, n = 500)
     max_Im = maximum(filter(isfinite, Im))
     map!(x -> isnan(x) ? max_Re : clamp(x, 0, max_Re), Re, Re)
     map!(x -> isnan(x) ? max_Im : clamp(x, 0, max_Im), Im, Im)
-    map!(x -> log(x + 1), Re, Re)
-    map!(x -> log(x + 1), Im, Im)
+    map!(log1p, Re, Re)
+    map!(log1p, Im, Im)
 
     figure = ComplexColor.Figure(; size = (2n, n))
     titlesize = 21
