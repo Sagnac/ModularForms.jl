@@ -60,30 +60,32 @@ j = ModularFunction(j_)
 
 q(τ) = ei2pi(τ)
 
+function logclamp!(w)
+    max_w = maximum(filter(isfinite, w))
+    map!(w, w) do x
+        log1p(isnan(x) ? max_w : clamp(x, 0, max_w))
+    end
+end
+
 function complex_plot(f::ModularForm, n = 500)
 
     x = y = range(-1, 1, n)
     q = complex.(x, y')
     M = f.(q)
     M[abs.(q) .≥ 1] .= 0
-    Re, Im = reim(M)
-    max_Re = maximum(filter(isfinite, Re))
-    max_Im = maximum(filter(isfinite, Im))
-    map!(x -> isnan(x) ? max_Re : clamp(x, 0, max_Re), Re, Re)
-    map!(x -> isnan(x) ? max_Im : clamp(x, 0, max_Im), Im, Im)
-    map!(log1p, Re, Re)
-    map!(log1p, Im, Im)
-
+    u, v = reim(M)
+    logclamp!(u)
+    logclamp!(v)
     figure = ComplexColor.Figure(; size = (2n, n))
     titlesize = 21
-    axis_Re = ComplexColor.Axis(figure[1,1]; title = L"Re_+(f(q))", titlesize)
-    axis_Im = ComplexColor.Axis(figure[1,2]; title = L"Im_+(f(q))", titlesize)
-    ComplexColor.hidedecorations!(axis_Re)
-    ComplexColor.hidedecorations!(axis_Im)
+    u_axis = ComplexColor.Axis(figure[1,1]; title = L"Re_+(f(q))", titlesize)
+    v_axis = ComplexColor.Axis(figure[1,2]; title = L"Im_+(f(q))", titlesize)
+    ComplexColor.hidedecorations!(u_axis)
+    ComplexColor.hidedecorations!(v_axis)
     kwargs = (; interpolate = false, colormap = :pink)
 
-    ComplexColor.image!(axis_Re, Re; kwargs...)
-    ComplexColor.image!(axis_Im, Im; kwargs...)
+    ComplexColor.image!(u_axis, u; kwargs...)
+    ComplexColor.image!(v_axis, v; kwargs...)
 
     display(Screen(), figure)
 
