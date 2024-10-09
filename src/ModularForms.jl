@@ -87,7 +87,7 @@ function complex_plot(f::ModularForm, n = 500)
     ComplexColor.image!(u_axis, u; kwargs...)
     ComplexColor.image!(v_axis, v; kwargs...)
 
-    display(Screen(), figure)
+    figure
 
 end
 
