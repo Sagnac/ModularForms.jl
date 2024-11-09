@@ -55,7 +55,14 @@ end
 
 (F::ModularFunction)(q) = F.f(q)
 
-S(a, q, t) = ∑(n ^ a * q ^ n / (1 - q ^ n) for n ∈ 1:t)
+function S(a, q, t)
+    s = 0.0im
+    for n ∈ 1:t
+        qⁿ = q^n
+        s += n^a * qⁿ / (1 - qⁿ)
+    end
+    return s
+end
 
 # Fourier series expansion of the Eisenstein series
 function eisenstein(b, c, f, q)
