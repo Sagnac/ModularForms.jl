@@ -4,7 +4,7 @@ using ComplexColor
 import ComplexColor: GLMakie.Screen, complex_plot
 using SpecialFunctions: zeta
 
-export ModularForm, ModularFunction, S, E, j, q, complex_plot
+export ModularForm, ModularFunction, S, G, E, j, q, complex_plot
 
 const ∑ = sum
 const ∏ = prod
@@ -13,18 +13,39 @@ const t = 275
 
 ei2pi(x) = cispi(2x)
 
+function γ(k)
+    (isodd(k) || k < 4) && throw(DomainError(k, "\nrequired: k ≥ 4, k even\n"))
+    2 / ζ(1 - k)
+end
+
 abstract type ModularForm end
 
+# Eisenstein series
+struct G <: ModularForm
+    k::Int
+    b::Float64
+    c::Float64
+    t::Int
+    function G(k::Int, t::Int)
+        b = 2ζ(k)
+        c = b * γ(k) # == 2(2πi)^k / (k - 1)!
+                     # == 2.0^(k+1) * π^k * (-1.0)^(k/2) / ∏(2.0:float(k-1))
+        new(k, b, c, t)
+    end
+end
+
+# normalized Eisenstein series
 struct E <: ModularForm
     k::Int
     c::Float64
     t::Int
     function E(k::Int, t::Int)
-        (isodd(k) || k < 4) && throw(DomainError(k, "\nrequired: k ≥ 4, k even\n"))
-        c = 2 / ζ(1 - k)
+        c = γ(k)
         new(k, c, t)
     end
 end
+
+G(k::Int) = G(k, t)
 
 E(k::Int) = E(k, t)
 
@@ -36,10 +57,15 @@ end
 
 S(a, q, t) = ∑(n ^ a * q ^ n / (1 - q ^ n) for n ∈ 1:t)
 
-function (E_k::E)(q)
-    (; k, c, t) = E_k
-    1 + c * S(k - 1, q, t)
+# Fourier series expansion of the Eisenstein series
+function eisenstein(b, c, f, q)
+    (; k, t) = f
+    b + c * S(k - 1, q, t)
 end
+
+(Gₖ::G)(q) = eisenstein(Gₖ.b, Gₖ.c, Gₖ, q)
+
+(Eₖ::E)(q) = eisenstein(1, Eₖ.c, Eₖ, q)
 
 E4 = E(4)
 
