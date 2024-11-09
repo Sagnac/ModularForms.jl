@@ -4,7 +4,7 @@ using ComplexColor
 import ComplexColor: GLMakie.Screen, complex_plot
 using SpecialFunctions: zeta
 
-export ModularForm, S, E, j, q, complex_plot
+export ModularForm, ModularFunction, S, E, j, q, complex_plot
 
 const ∑ = sum
 const ∏ = prod
