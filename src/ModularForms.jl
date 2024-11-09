@@ -20,8 +20,10 @@ end
 
 abstract type ModularForm end
 
+abstract type EisensteinSeries <: ModularForm end
+
 # Eisenstein series
-struct G <: ModularForm
+struct G <: EisensteinSeries
     k::Int
     b::Float64
     c::Float64
@@ -34,7 +36,7 @@ struct G <: ModularForm
 end
 
 # normalized Eisenstein series
-struct E <: ModularForm
+struct E <: EisensteinSeries
     k::Int
     c::Float64
     function E(k::Int)
@@ -61,16 +63,12 @@ function S(a, q, t)
 end
 
 # Fourier series expansion of the Eisenstein series
-function eisenstein(f, q, t)
+function (f::EisensteinSeries)(q, t = t)
     (; b, c, k) = f
     b + c * S(k - 1, q, t)
 end
 
 Base.getproperty(f::E, name::Symbol) = name == :b ? 1 : getfield(f, name)
-
-(Gₖ::G)(q, t = t) = eisenstein(Gₖ, q, t)
-
-(Eₖ::E)(q, t = t) = eisenstein(Eₖ, q, t)
 
 E4 = E(4)
 E6 = E(6)
