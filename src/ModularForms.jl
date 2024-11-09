@@ -19,14 +19,14 @@ struct E <: ModularForm
     k::Int
     c::Float64
     t::Int
-    function E(k, t)
-        (isodd(k) || k < 2) && error("Weight must be even and greater than zero.")
+    function E(k::Int, t::Int)
+        (isodd(k) || k < 4) && throw(DomainError(k, "\nrequired: k ≥ 4, k even\n"))
         c = 2 / ζ(1 - k)
         new(k, c, t)
     end
 end
 
-E(k) = E(k, t)
+E(k::Int) = E(k, t)
 
 struct ModularFunction{F} <: ModularForm
     f::F
