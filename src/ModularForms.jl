@@ -25,12 +25,11 @@ struct G <: ModularForm
     k::Int
     b::Float64
     c::Float64
-    t::Int
-    function G(k::Int, t::Int)
+    function G(k::Int)
         b = 2ζ(k)
         c = b * γ(k) # == 2(2πi)^k / (k - 1)!
                      # == 2.0^(k+1) * π^k * (-1.0)^(k/2) / ∏(2.0:float(k-1))
-        new(k, b, c, t)
+        new(k, b, c)
     end
 end
 
@@ -38,22 +37,18 @@ end
 struct E <: ModularForm
     k::Int
     c::Float64
-    t::Int
-    function E(k::Int, t::Int)
+    function E(k::Int)
         c = γ(k)
-        new(k, c, t)
+        new(k, c)
     end
 end
-
-G(k::Int) = G(k, t)
-
-E(k::Int) = E(k, t)
 
 struct ModularFunction{F} <: ModularForm
     f::F
 end
 
 (F::ModularFunction)(q) = F.f(q)
+(F::ModularFunction)(q, t) = F.f(q, t)
 
 # Lambert series
 function S(a, q, t)
@@ -66,27 +61,30 @@ function S(a, q, t)
 end
 
 # Fourier series expansion of the Eisenstein series
-function eisenstein(b, c, f, q)
-    (; k, t) = f
+function eisenstein(f, q, t)
+    (; b, c, k) = f
     b + c * S(k - 1, q, t)
 end
 
-(Gₖ::G)(q) = eisenstein(Gₖ.b, Gₖ.c, Gₖ, q)
+Base.getproperty(f::E, name::Symbol) = name == :b ? 1 : getfield(f, name)
 
-(Eₖ::E)(q) = eisenstein(1, Eₖ.c, Eₖ, q)
+(Gₖ::G)(q, t = t) = eisenstein(Gₖ, q, t)
+
+(Eₖ::E)(q, t = t) = eisenstein(Eₖ, q, t)
 
 E4 = E(4)
+E6 = E(6)
 
 # normalized modular discriminant η²⁴(q) [regular discriminant divided by (2π)¹²]
 # where η is the Dedekind eta function
 Δ(q, t = t) = q * ∏((1 - q ^ n) ^ 24 for n ∈ 1:t)
 
-g2(q) = (4 * π^4 / 3) * E4(q)
+g2(q, t = t) = (4 * π^4 / 3) * E4(q, t)
 
-g3(q) = (8 * π^6 / 27) * E(6)(q)
+g3(q, t = t) = (8 * π^6 / 27) * E6(q, t)
 
 # j(q) = 12^3 * J(q) where J is Felix Klein's Absolute Invariant
-j_invariant(q, t = t) = E(4, t)(q) ^ 3 / Δ(q, t)
+j_invariant(q, t = t) = E4(q, t) ^ 3 / Δ(q, t)
 
 # function j_invariant(q, t = t)
     # g2_3 = g2(q, t) ^ 3
@@ -104,11 +102,11 @@ function logclamp!(w)
     end
 end
 
-function complex_plot(f::ModularForm, n = 500)
+function complex_plot(f::ModularForm, t = t, n = 500)
 
     x = y = range(-1, 1, n)
     q = complex.(x, y')
-    M = f.(q)
+    M = f.(q, t)
     M[abs.(q) .≥ 1] .= 0
     u, v = reim(M)
     logclamp!(u)
