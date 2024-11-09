@@ -55,6 +55,7 @@ end
 
 (F::ModularFunction)(q) = F.f(q)
 
+# Lambert series
 function S(a, q, t)
     s = 0.0im
     for n ∈ 1:t
@@ -76,20 +77,23 @@ end
 
 E4 = E(4)
 
+# normalized modular discriminant η²⁴(q) [regular discriminant divided by (2π)¹²]
+# where η is the Dedekind eta function
 Δ(q, t = t) = q * ∏((1 - q ^ n) ^ 24 for n ∈ 1:t)
 
 g2(q) = (4 * π^4 / 3) * E4(q)
 
 g3(q) = (8 * π^6 / 27) * E(6)(q)
 
-j_(q, t = t) = E(4, t)(q) ^ 3 / Δ(q, t)
+# j(q) = 12^3 * J(q) where J is Felix Klein's Absolute Invariant
+j_invariant(q, t = t) = E(4, t)(q) ^ 3 / Δ(q, t)
 
-# function j_(q, t = t)
+# function j_invariant(q, t = t)
     # g2_3 = g2(q, t) ^ 3
     # 1728 * g2_3 / (g2_3 - 27 * g3(q, t) ^ 2)
 # end
 
-j = ModularFunction(j_)
+j = ModularFunction(j_invariant)
 
 q(τ) = ei2pi(τ)
 
