@@ -11,7 +11,7 @@ const ∏ = prod
 const ζ = zeta
 const t = 275
 
-ei2pi(x) = cispi(2x)
+q(τ) = cispi(2τ)
 
 function γ(k)
     (isodd(k) || k < 4) && throw(DomainError(k, "\nrequired: k ≥ 4, k even\n"))
@@ -90,8 +90,6 @@ j_invariant(q, t = t) = E4(q, t) ^ 3 / Δ(q, t)
 # end
 
 j = ModularFunction(j_invariant)
-
-q(τ) = ei2pi(τ)
 
 function logclamp!(w)
     max_w = maximum(filter(isfinite, w))
