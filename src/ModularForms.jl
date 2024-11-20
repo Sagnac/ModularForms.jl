@@ -49,11 +49,11 @@ struct ModularFunction{F} <: ModularForm
     f::F
 end
 
-(F::ModularFunction)(q) = F.f(q)
-(F::ModularFunction)(q, t) = F.f(q, t)
+(F::ModularFunction)(q::Number) = F.f(q)
+(F::ModularFunction)(q::Number, t::Int) = F.f(q, t)
 
 # Lambert series
-function S(a, q, t)
+function S(a::Number, q::Number, t::Int)
     s = 0.0im
     for n ∈ 1:t
         qⁿ = q^n
@@ -63,7 +63,7 @@ function S(a, q, t)
 end
 
 # Fourier series expansion of the Eisenstein series
-function (f::EisensteinSeries)(q, t = t[])
+function (f::EisensteinSeries)(q::Number, t::Int = t[])
     (; b, c, k) = f
     b + c * S(k - 1, q, t)
 end
@@ -82,7 +82,7 @@ g2(q, t = t[]) = (4 * π^4 / 3) * E4(q, t)
 g3(q, t = t[]) = (8 * π^6 / 27) * E6(q, t)
 
 # j(q) = 12^3 * J(q) where J is Felix Klein's Absolute Invariant
-j_invariant(q, t = t[]) = E4(q, t) ^ 3 / Δ(q, t)
+j_invariant(q::Number, t::Int = t[]) = E4(q, t) ^ 3 / Δ(q, t)
 
 # function j_invariant(q, t = t[])
     # g2_3 = g2(q, t) ^ 3
@@ -98,7 +98,7 @@ function logclamp!(w)
     end
 end
 
-function complex_plot(f::ModularForm, t = t[], n = 500)
+function complex_plot(f::ModularForm, t::Int = t[], n::Int = 500)
 
     x = y = range(-1, 1, n)
     q = complex.(x, y')
