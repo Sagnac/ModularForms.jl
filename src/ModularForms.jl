@@ -9,7 +9,7 @@ export ModularForm, ModularFunction, S, G, E, j, q, complex_plot
 const ∑ = sum
 const ∏ = prod
 const ζ = zeta
-const t = 275
+const t = Ref(275)
 
 q(τ) = cispi(2τ)
 
@@ -63,7 +63,7 @@ function S(a, q, t)
 end
 
 # Fourier series expansion of the Eisenstein series
-function (f::EisensteinSeries)(q, t = t)
+function (f::EisensteinSeries)(q, t = t[])
     (; b, c, k) = f
     b + c * S(k - 1, q, t)
 end
@@ -75,16 +75,16 @@ E6 = E(6)
 
 # normalized modular discriminant η²⁴(q) [regular discriminant divided by (2π)¹²]
 # where η is the Dedekind eta function
-Δ(q, t = t) = q * ∏((1 - q ^ n) ^ 24 for n ∈ 1:t)
+Δ(q, t = t[]) = q * ∏((1 - q ^ n) ^ 24 for n ∈ 1:t)
 
-g2(q, t = t) = (4 * π^4 / 3) * E4(q, t)
+g2(q, t = t[]) = (4 * π^4 / 3) * E4(q, t)
 
-g3(q, t = t) = (8 * π^6 / 27) * E6(q, t)
+g3(q, t = t[]) = (8 * π^6 / 27) * E6(q, t)
 
 # j(q) = 12^3 * J(q) where J is Felix Klein's Absolute Invariant
-j_invariant(q, t = t) = E4(q, t) ^ 3 / Δ(q, t)
+j_invariant(q, t = t[]) = E4(q, t) ^ 3 / Δ(q, t)
 
-# function j_invariant(q, t = t)
+# function j_invariant(q, t = t[])
     # g2_3 = g2(q, t) ^ 3
     # 1728 * g2_3 / (g2_3 - 27 * g3(q, t) ^ 2)
 # end
@@ -98,7 +98,7 @@ function logclamp!(w)
     end
 end
 
-function complex_plot(f::ModularForm, t = t, n = 500)
+function complex_plot(f::ModularForm, t = t[], n = 500)
 
     x = y = range(-1, 1, n)
     q = complex.(x, y')
