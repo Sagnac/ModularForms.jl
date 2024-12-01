@@ -4,7 +4,8 @@ using ComplexColor
 import ComplexColor: GLMakie.Screen, complex_plot, Interval, ComplexArray
 using SpecialFunctions: zeta
 
-export ModularForm, ModularFunction, S, G, E, j, q, complex_plot, ReIm, ModArg
+export ModularForm, ModularFunction, S, G, E, j, q, complex_plot, ReIm, ModArg,
+       HSL, Oklch
 
 const ∑ = sum
 const ∏ = prod
