@@ -1,11 +1,14 @@
 module ModularForms
 
 using ComplexColor
-import ComplexColor: GLMakie.Screen, complex_plot, Interval, ComplexArray
+import ComplexColor: GLMakie.Screen, complex_plot, ComplexArray
 using SpecialFunctions: zeta
 
-export ModularForm, ModularFunction, S, G, E, j, q, complex_plot, ReIm, ModArg,
-       HSL, Oklch
+export ModularForm, ModularFunction, S, G, E, j, q, ReIm, ModArg
+
+for name in names(ComplexColor)
+    @eval export $name
+end
 
 const ∑ = sum
 const ∏ = prod
