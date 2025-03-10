@@ -19,7 +19,9 @@ const n = Ref(500)
 q(τ) = cispi(2τ)
 
 function γ(k)
-    (isodd(k) || k < 4) && throw(DomainError(k, "\nrequired: k ≥ 4, k even\n"))
+    if isodd(k) || k < 2
+        throw(DomainError(k, "\nWeight must be even and greater than zero.\n"))
+    end
     2 / ζ(1 - k)
 end
 
